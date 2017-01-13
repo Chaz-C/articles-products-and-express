@@ -5,12 +5,25 @@ const productsDb = require('../db/products');
 const bodyParser = require('body-parser');
 const app = express();
 
-app.use(bodyParser.urlencoded({ extended: true}));
+let productsArr = productsDb.allProducts;
+
+let newId = 0;
+
+function allIds() {
+  let idArr = [];
+  for ( let i = 0; i < productsArr.length; i ++ ) {
+    idArr.push(productsArr[i].id);
+  }
+  return idArr;
+}
 
 router.post('/', (req, res) => {
-  productsDb.allProducts.push(req.body);
-  console.log(productsDb.allProducts);
+  let newItem = req.body;
+  newItem.id = newId;
+  productsArr.push(newItem);
   res.render('index', productsDb);
+  console.log(productsArr);
+  newId++;
 });
 
 
