@@ -16,8 +16,8 @@ function findIndex(id) {
     idArr.push(productsArr[i].id);
   }
 
-  if ( idArr.indexOf(parseInt(id)) > -1 ) {
-    return idArr.indexOf(parseInt(id));
+  if ( idArr.indexOf(`${id}`) > -1 ) {
+    return idArr.indexOf(`${id}`);
   } else {
     return false;
   }
@@ -34,8 +34,9 @@ router.get('/:id', (req, res) => {
 });
 
 router.post('/', (req, res) => {
+  console.log(req.body);
   let newItem = req.body;
-  newItem.id = newId;
+  newItem.id = `${newId}`;
   productsArr.push(newItem);
   res.redirect('/products');
   newId++;
