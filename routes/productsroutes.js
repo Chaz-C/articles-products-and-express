@@ -1,4 +1,3 @@
-// jshint esversion: 6
 const express = require('express');
 const router = express.Router();
 const productsDb = require('../db/products');
@@ -23,23 +22,49 @@ function findIndex(id) {
   }
 }
 
+router.get('/new', (req, res) => {
+  res.render('new.hbs');
+});
+
 router.get('/', (req, res) => {
   res.render('index', productsDb);
 });
 
+router.get('/:id/edit', (req, res) => {
+  console.log(req.params.id);
+  let index = findIndex(req.params.id);
+  res.render('edit.hbs', productsArr[index]);
+});
+
 router.get('/:id', (req, res) => {
   let index = findIndex(req.params.id);
-  console.log('index', index);
   res.render('product', productsArr[index]);
 });
 
+
 router.post('/', (req, res) => {
-  console.log(req.body);
   let newItem = req.body;
   newItem.id = `${newId}`;
   productsArr.push(newItem);
   res.redirect('/products');
   newId++;
+});
+
+router.put('/:id', (req, res) => {
+  console.log('put working-ish');
+  let index = findIndex(req.params.id);
+  let newProductValues = req.body;
+  let editProduct = productsArr[index];
+  if ( editProduct.hasOwnProperty('name')) {
+    editProduct.name = newProductValues.name;
+  }
+  if ( editProduct.hasOwnProperty('price')) {
+    editProduct.price = newProductValues.price;
+  }
+  if ( editProduct.hasOwnProperty('inventory')) {
+    editProduct.inventory = newProductValues.inventory;
+  }
+  res.redirect(303, `/products/${req.params.id}`);
 });
 
 

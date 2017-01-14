@@ -1,8 +1,8 @@
-// jshint esversion: 6
 const express = require('express');
 const app = express();
 const handlebars = require('express-handlebars');
 const bodyParser = require('body-parser');
+const methodOverride = require('method-override');
 
 const products = require('./routes/productsroutes');
 
@@ -19,6 +19,7 @@ app.get('/', (req,res) => {
 });
 
 app.use(bodyParser.urlencoded({ extended: true}));
+app.use(methodOverride('_method'));
 
 app.use('/products', products);
 
