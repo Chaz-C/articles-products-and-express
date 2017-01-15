@@ -1,11 +1,32 @@
-<form action="/products" method="post">
-  Name:<br>
-  <input type="text" id="product-name" placeholder="name" name="name"/><br>
-  Price:<br>
-  <input type="text" id="product-price" placeholder="number" name="price" /><br>
-  Inventory:<br>
-  <input type="text" id="product-inventory" placeholder="number" name="inventory" /><br>
+{{#if articles}}
+  <form action="/articles" method="post">
+  Title:<br>
+  <input type="text" id="product-name" placeholder="title" name="title"/><br>
+  Body:<br>
+  <input type="text" id="product-price" placeholder="text" name="body" /><br>
+  Author:<br>
+  <input type="text" id="product-inventory" placeholder="name" name="author" /><br>
   <button id="request-button">Submit</button>
 </form>
+
+  {{else}}
+
+    <form action="/products" method="post">
+      Name:<br>
+      <input type="text" id="product-name" placeholder="name" name="name"/><br>
+      Price:<br>
+      <input type="text" id="product-price" placeholder="number" name="price" /><br>
+      Inventory:<br>
+      <input type="text" id="product-inventory" placeholder="number" name="inventory" /><br>
+      <button id="request-button">Submit</button>
+    </form>
+
+{{/if}}
+
+
+
+
+
+
 
 {{{messages}}}

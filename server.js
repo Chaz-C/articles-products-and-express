@@ -35,5 +35,6 @@ app.use(function (req, res, next) {
 });
 
 app.use('/products', products);
+app.use('/articles', articles);
 
 module.exports = app;

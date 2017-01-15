@@ -1,14 +1,11 @@
 const express = require('express');
 const router = express.Router();
 const productsDb = require('../db/products');
-const bodyParser = require('body-parser');
 const app = express();
 
 let productsArr = productsDb.allProducts;
 
 let newId = 0;
-
-let fail = true;
 
 function findIndex(id) {
   let idArr = [];
@@ -62,7 +59,6 @@ router.put('/:id', (req, res) => {
   let index = findIndex(req.params.id);
   let newProductValues = req.body;
   let editProduct = productsArr[index];
-  console.log(newProductValues);
   if ( newProductValues.hasOwnProperty('name') || newProductValues.hasOwnProperty('price') || newProductValues.hasOwnProperty('inventory') ) {
 
         if ( newProductValues.hasOwnProperty('name') && newProductValues.name !== '' ) {
@@ -76,14 +72,12 @@ router.put('/:id', (req, res) => {
         }
           res.redirect(303, `/products/${req.params.id}`);
     } else {
-      console.log('fail');
       req.flash("error-msg", "PUT UNSUCCESSFUL Invalid property or value");
       res.redirect(303, `/products/${req.params.id}/edit`);
   }
 });
 
 router.delete('/:id', (req, res) => {
-  console.log('delete');
   let index = findIndex(req.params.id);
 
   if ( index === false ) {
@@ -91,7 +85,6 @@ router.delete('/:id', (req, res) => {
     res.redirect(303, '/products');
   } else {
     productsArr.splice(index, 1);
-    console.log(productsArr);
     res.redirect(303, '/products');
   }
 });
