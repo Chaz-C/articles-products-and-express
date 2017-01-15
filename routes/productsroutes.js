@@ -8,6 +8,8 @@ let productsArr = productsDb.allProducts;
 
 let newId = 0;
 
+let fail = true;
+
 function findIndex(id) {
   let idArr = [];
 
@@ -23,17 +25,16 @@ function findIndex(id) {
 }
 
 router.get('/new', (req, res) => {
-  res.render('new.hbs');
+  res.render('new.hbs', { messages: res.locals.messages()} );
 });
 
 router.get('/', (req, res) => {
-  res.render('index', productsDb);
+  res.render('index', { products: productsDb, messages: res.locals.messages() });
 });
 
 router.get('/:id/edit', (req, res) => {
-  console.log(req.params.id);
   let index = findIndex(req.params.id);
-  res.render('edit.hbs', productsArr[index]);
+  res.render('edit.hbs', { productsArr: productsArr[index], messages: res.locals.messages() } );
 });
 
 router.get('/:id', (req, res) => {
@@ -44,27 +45,55 @@ router.get('/:id', (req, res) => {
 
 router.post('/', (req, res) => {
   let newItem = req.body;
-  newItem.id = `${newId}`;
-  productsArr.push(newItem);
-  res.redirect('/products');
-  newId++;
+
+  if ( newItem.hasOwnProperty('name') && newItem.hasOwnProperty('price') &&
+    newItem.hasOwnProperty('inventory') && newItem.name !== '' && newItem.price !== '' && newItem.inventory !== '' ) {
+    newItem.id = `${newId}`;
+    productsArr.push(newItem);
+    res.redirect('/products');
+    newId++;
+  } else {
+    req.flash("error-msg", "POST UNSUCCESSFUL Invalid property or value");
+    res.redirect('/products/new');
+  }
 });
 
 router.put('/:id', (req, res) => {
-  console.log('put working-ish');
   let index = findIndex(req.params.id);
   let newProductValues = req.body;
   let editProduct = productsArr[index];
-  if ( editProduct.hasOwnProperty('name')) {
-    editProduct.name = newProductValues.name;
+  console.log(newProductValues);
+  if ( newProductValues.hasOwnProperty('name') || newProductValues.hasOwnProperty('price') || newProductValues.hasOwnProperty('inventory') ) {
+
+        if ( newProductValues.hasOwnProperty('name') && newProductValues.name !== '' ) {
+          editProduct.name = newProductValues.name;
+        }
+        if ( newProductValues.hasOwnProperty('price') && newProductValues.price !== '') {
+          editProduct.price = newProductValues.price;
+        }
+        if ( newProductValues.hasOwnProperty('inventory') && newProductValues.inventory !== '') {
+          editProduct.inventory = newProductValues.inventory;
+        }
+          res.redirect(303, `/products/${req.params.id}`);
+    } else {
+      console.log('fail');
+      req.flash("error-msg", "PUT UNSUCCESSFUL Invalid property or value");
+      res.redirect(303, `/products/${req.params.id}/edit`);
   }
-  if ( editProduct.hasOwnProperty('price')) {
-    editProduct.price = newProductValues.price;
+});
+
+router.delete('/:id', (req, res) => {
+  console.log('delete');
+  let index = findIndex(req.params.id);
+
+  if ( index === false ) {
+    req.flash("error-msg", "DELETE UNSUCCESSFUL, ID does not exist");
+    res.redirect(303, '/products');
+  } else {
+    productsArr.splice(index, 1);
+    console.log(productsArr);
+    res.redirect(303, '/products');
   }
-  if ( editProduct.hasOwnProperty('inventory')) {
-    editProduct.inventory = newProductValues.inventory;
-  }
-  res.redirect(303, `/products/${req.params.id}`);
 });
 
 
