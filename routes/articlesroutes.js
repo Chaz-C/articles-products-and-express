@@ -27,15 +27,13 @@ router.get('/', (req, res) => {
   res.render('index', { articles: articlesDb, messages: res.locals.messages() });
 });
 
-// router.get('/:id/edit', (req, res) => {
-//   let index = findIndex(req.params.id);
-//   res.render('edit.hbs', { productsArr: productsArr[index], messages: res.locals.messages() } );
-// });
+router.get('/:title/edit', (req, res) => {
+  let index = findIndex(req.params.title);
+  res.render('edit.hbs', { articlesArr: articlesArr[index], articles: true, messages: res.locals.messages() } );
+});
 
 router.get('/:title', (req, res) => {
-  console.log(req.params.title);
   let index = findIndex(req.params.title);
-  console.log(index);
   res.render('article', articlesArr[index]);
 });
 
@@ -50,42 +48,42 @@ router.post('/', (req, res) => {
     articlesArr.push(newArticle);
     res.redirect('/articles');
   } else {
-    req.flash("error-msg", "POST UNSUCCESSFUL Invalid property or value");
+    req.flash("error-msg", "POST UNSUCCESSFUL Invaltitle property or value");
     res.redirect('/articles/new');
   }
 });
 
-// router.put('/:id', (req, res) => {
-//   let index = findIndex(req.params.id);
-//   let newProductValues = req.body;
-//   let editProduct = productsArr[index];
-//   if ( newProductValues.hasOwnProperty('name') || newProductValues.hasOwnProperty('price') || newProductValues.hasOwnProperty('inventory') ) {
+router.put('/:title', (req, res) => {
+  let index = findIndex(req.params.title);
+  let newArticleValues = req.body;
+  let editArticle = articlesArr[index];
+  if ( newArticleValues.hasOwnProperty('title') || newArticleValues.hasOwnProperty('body') || newArticleValues.hasOwnProperty('author') ) {
 
-//         if ( newProductValues.hasOwnProperty('name') && newProductValues.name !== '' ) {
-//           editProduct.name = newProductValues.name;
-//         }
-//         if ( newProductValues.hasOwnProperty('price') && newProductValues.price !== '') {
-//           editProduct.price = newProductValues.price;
-//         }
-//         if ( newProductValues.hasOwnProperty('inventory') && newProductValues.inventory !== '') {
-//           editProduct.inventory = newProductValues.inventory;
-//         }
-//           res.redirect(303, `/products/${req.params.id}`);
-//     } else {
-//       req.flash("error-msg", "PUT UNSUCCESSFUL Invalid property or value");
-//       res.redirect(303, `/products/${req.params.id}/edit`);
-//   }
-// });
+        if ( newArticleValues.hasOwnProperty('title') && newArticleValues.title !== '' ) {
+          editArticle.title = newArticleValues.title;
+        }
+        if ( newArticleValues.hasOwnProperty('body') && newArticleValues.body !== '') {
+          editArticle.body = newArticleValues.body;
+        }
+        if ( newArticleValues.hasOwnProperty('author') && newArticleValues.author !== '') {
+          editArticle.author = newArticleValues.author;
+        }
+          res.redirect(303, `/articles/${req.params.title}`);
+    } else {
+      req.flash("error-msg", "PUT UNSUCCESSFUL Invalid property or value");
+      res.redirect(303, `/articles/${req.params.title}/edit`);
+  }
+});
 
-// router.delete('/:id', (req, res) => {
-//   let index = findIndex(req.params.id);
+// router.delete('/:title', (req, res) => {
+//   let index = findIndex(req.params.title);
 
 //   if ( index === false ) {
-//     req.flash("error-msg", "DELETE UNSUCCESSFUL, ID does not exist");
-//     res.redirect(303, '/products');
+//     req.flash("error-msg", "DELETE UNSUCCESSFUL, title does not exist");
+//     res.redirect(303, '/articles');
 //   } else {
-//     productsArr.splice(index, 1);
-//     res.redirect(303, '/products');
+//     articlesArr.splice(index, 1);
+//     res.redirect(303, '/articles');
 //   }
 // });
 

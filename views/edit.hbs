@@ -1,3 +1,16 @@
+{{#if articles}}
+  <form action="/articles/{{articlesArr.urlTitle}}?_method=PUT" method="post">
+    Title:<br>
+    <input type="text" id="article-title" value="{{articlesArr.title}}" name="title"/><br>
+    Body:<br>
+    <input type="text" id="article-body" value="{{articlesArr.body}}" name="body" /><br>
+    Author:<br>
+    <input type="text" id="article-author" value="{{articlesArr.author}}" name="author" /><br>
+    <button id="request-button">Submit</button>
+  </form>
+
+  {{else}}
+
 <form action="/products/{{productsArr.id}}?_method=PUT" method="post">
   Name:<br>
   <input type="text" id="product-name" name="name" value="{{productsArr.name}}" /><br>
@@ -7,5 +20,7 @@
   <input type="text" id="product-inventory" name="inventory" value="{{productsArr.inventory}}" /><br>
   <button id="request-button">Submit</button>
 </form>
+
+{{/if}}
 
 {{{messages}}}
