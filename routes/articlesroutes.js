@@ -41,22 +41,35 @@ router.get('/:title', (req, res) => {
 router.post('/', (req, res) => {
   let newArticle = req.body;
 
-  if ( newArticle.hasOwnProperty('title') && newArticle.hasOwnProperty('body') &&
-    newArticle.hasOwnProperty('author') && newArticle.title !== '' && newArticle.body !== '' && newArticle.author !== '' ) {
-    let createUrlTitle =
-    newArticle.urlTitle = `${encodeURIComponent(newArticle.title)}`;
-    articlesArr.push(newArticle);
-    res.redirect('/articles');
+  let doesItExist = findIndex(req.body.title);
+
+  if ( doesItExist !== false ) {
+    req.flash("error-msg", "article title already exists");
+    res.redirect(303, '/articles/new');
   } else {
-    req.flash("error-msg", "POST UNSUCCESSFUL Invaltitle property or value");
-    res.redirect('/articles/new');
+    if ( newArticle.hasOwnProperty('title') && newArticle.hasOwnProperty('body') &&
+      newArticle.hasOwnProperty('author') && newArticle.title !== '' && newArticle.body !== '' && newArticle.author !== '' ) {
+      let createUrlTitle =
+      newArticle.urlTitle = `${encodeURIComponent(newArticle.title)}`;
+      articlesArr.push(newArticle);
+      res.redirect('/articles');
+    } else {
+      req.flash("error-msg", "POST UNSUCCESSFUL Invaltitle property or value");
+      res.redirect('/articles/new');
+    }
   }
+
 });
 
 router.put('/:title', (req, res) => {
   let index = findIndex(req.params.title);
   let newArticleValues = req.body;
   let editArticle = articlesArr[index];
+  if ( index === false ) {
+    console.log('yo');
+    req.flash("error-msg", `"${req.params.title}"" does not exist`);
+    res.redirect(303, '/articles');
+  }
   if ( newArticleValues.hasOwnProperty('title') || newArticleValues.hasOwnProperty('body') || newArticleValues.hasOwnProperty('author') ) {
 
         if ( newArticleValues.hasOwnProperty('title') && newArticleValues.title !== '' ) {
@@ -75,17 +88,17 @@ router.put('/:title', (req, res) => {
   }
 });
 
-// router.delete('/:title', (req, res) => {
-//   let index = findIndex(req.params.title);
+router.delete('/:title', (req, res) => {
+  let index = findIndex(req.params.title);
 
-//   if ( index === false ) {
-//     req.flash("error-msg", "DELETE UNSUCCESSFUL, title does not exist");
-//     res.redirect(303, '/articles');
-//   } else {
-//     articlesArr.splice(index, 1);
-//     res.redirect(303, '/articles');
-//   }
-// });
+  if ( index === false ) {
+    req.flash("error-msg", "DELETE UNSUCCESSFUL, title does not exist");
+    res.redirect(303, '/articles');
+  } else {
+    articlesArr.splice(index, 1);
+    res.redirect(303, '/articles');
+  }
+});
 
 
 
