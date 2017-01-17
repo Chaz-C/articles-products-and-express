@@ -6,6 +6,7 @@ const methodOverride = require('method-override');
 const cookieParser = require('cookie-parser');
 const flash = require('connect-flash');
 const session = require('express-session');
+const fs = require('fs');
 
 const products = require('./routes/productsroutes');
 const articles = require('./routes/articlesroutes');
@@ -34,7 +35,27 @@ app.use(function (req, res, next) {
   next();
 });
 
+app.use(function (req, res, next) {
+  let date = new Date();
+  let month = new Date().getMonth();
+  if ( month === 0 ) {
+    month = '01';
+  }
+  let currentDate = `${date.getFullYear()}-${month}-${date.getDate()}`;
+  let currentTime = `${date.getHours()}.${date.getMinutes()}.${
+    date.getSeconds()}`;
+
+  let data = `[ ${req.method} ] [ ${req.originalUrl} ] [ ${currentDate}_${currentTime} ]\n`;
+
+  fs.appendFile(`./logs/${currentDate}.log`, data, (err) => {
+    if (err) throw err;
+    console.log('success');
+  });
+  next();
+});
+
 app.use('/products', products);
 app.use('/articles', articles);
+
 
 module.exports = app;
