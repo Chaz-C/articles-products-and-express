@@ -66,7 +66,6 @@ router.put('/:title', (req, res) => {
   let newArticleValues = req.body;
   let editArticle = articlesArr[index];
   if ( index === false ) {
-    console.log('yo');
     req.flash("error-msg", `"${req.params.title}"" does not exist`);
     res.redirect(303, '/articles');
   }

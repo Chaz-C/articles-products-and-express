@@ -35,7 +35,9 @@ app.use(function (req, res, next) {
   next();
 });
 
+
 app.use(function (req, res, next) {
+
   let date = new Date();
   let month = new Date().getMonth();
   if ( month === 0 ) {
@@ -49,9 +51,19 @@ app.use(function (req, res, next) {
 
   fs.appendFile(`./logs/${currentDate}.log`, data, (err) => {
     if (err) throw err;
-    console.log('success');
   });
   next();
+});
+
+
+app.use('/articles', function (req, res, next) {
+  if ( req.headers.hasOwnProperty('version') && req.headers.version === '1.0' ) {
+    next();
+  } else if (req.headers.hasOwnProperty('version') === false ) {
+    next();
+  } else {
+    res.send({ "error": "bad headers" });
+  }
 });
 
 app.use('/products', products);
