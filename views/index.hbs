@@ -1,6 +1,6 @@
 {{{messages}}}
 
-{{#each products.allProducts}}
+{{#each products}}
   <div class="products">
     <h3>Name: {{name}}</h3>
     <p>Price: ${{price}}</p>
@@ -9,11 +9,11 @@
   </div>
 {{/each}}
 
-{{#each articles.allArticles}}
+{{#each articles}}
   <div class="articles">
     <h3>Title: {{title}}</h3>
     <p>Body: {{body}}</p>
     <p>Author: {{author}}</p>
-    <p>Url Title: {{urlTitle}}</p>
+    <p>Url Title: {{url_title}}</p>
   </div>
 {{/each}}

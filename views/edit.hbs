@@ -1,26 +1,26 @@
 {{#if articles}}
-  <form action="/articles/{{articlesArr.urlTitle}}?_method=PUT" method="post">
+  <form action="/articles/{{articlesObj.url_title}}?_method=PUT" method="post">
     Title:<br>
-    <input type="text" id="article-title" value="{{articlesArr.title}}" name="title"/><br>
+    <input type="text" id="article-title" value="{{articlesObj.title}}" name="title"/><br>
     Body:<br>
-    <input type="text" id="article-body" value="{{articlesArr.body}}" name="body" /><br>
+    <input type="text" id="article-body" value="{{articlesObj.body}}" name="body" /><br>
     Author:<br>
-    <input type="text" id="article-author" value="{{articlesArr.author}}" name="author" /><br>
+    <input type="text" id="article-author" value="{{articlesObj.author}}" name="author" /><br>
     <button id="request-button">Submit</button>
   </form>
 
   {{else}}
 
-<form action="/products/{{productsArr.id}}?_method=PUT" method="post">
+<form action="/products/{{products.id}}?_method=PUT" method="post">
   Name:<br>
-  <input type="text" id="product-name" name="name" value="{{productsArr.name}}" /><br>
+  <input type="text" id="product-name" name="name" value="{{products.name}}" /><br>
   Price:<br>
-  <input type="text" id="product-price" name="price" value="{{productsArr.price}}" /><br>
+  <input type="text" id="product-price" name="price" value="{{products.price}}" /><br>
   Inventory:<br>
-  <input type="text" id="product-inventory" name="inventory" value="{{productsArr.inventory}}" /><br>
+  <input type="text" id="product-inventory" name="inventory" value="{{products.inventory}}" /><br>
   <button id="request-button">Submit</button>
 </form>
 
-{{/if}}
+  {{/if}}
 
 {{{messages}}}
