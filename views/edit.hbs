@@ -1,11 +1,20 @@
+{{> getAllButtons}}
+
+{{> submitNew}}
+
+{{> searchButtons}} <br>
+
+{{> deleteForm}}
+
+
 {{#if articles}}
   <form action="/articles/{{articlesObj.url_title}}?_method=PUT" method="post">
     Title:<br>
-    <input type="text" id="article-title" value="{{articlesObj.title}}" name="title"/><br>
-    Body:<br>
-    <input type="text" id="article-body" value="{{articlesObj.body}}" name="body" /><br>
+    <input type="text" id="article-title" value="{{articlesObj.title}}" name="title" autocomplete="off" /><br>
     Author:<br>
-    <input type="text" id="article-author" value="{{articlesObj.author}}" name="author" /><br>
+    <input type="text" id="article-author" value="{{articlesObj.author}}" name="author" autocomplete="off" /><br>
+    Body:<br>
+    <input type="text" id="article-body" value="{{articlesObj.body}}" name="body" autocomplete="off" /><br>
     <button id="request-button">Submit</button>
   </form>
 
@@ -13,11 +22,11 @@
 
 <form action="/products/{{products.id}}?_method=PUT" method="post">
   Name:<br>
-  <input type="text" id="product-name" name="name" value="{{products.name}}" /><br>
+  <input type="text" id="product-name" name="name" value="{{products.name}}" autocomplete="off" /><br>
   Price:<br>
-  <input type="text" id="product-price" name="price" value="{{products.price}}" /><br>
+  <input type="text" id="product-price" name="price" value="{{products.price}}" autocomplete="off" /><br>
   Inventory:<br>
-  <input type="text" id="product-inventory" name="inventory" value="{{products.inventory}}" /><br>
+  <input type="text" id="product-inventory" name="inventory" value="{{products.inventory}}" autocomplete="off" /><br>
   <button id="request-button">Submit</button>
 </form>
 

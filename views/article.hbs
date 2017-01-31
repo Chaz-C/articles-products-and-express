@@ -1,6 +1,21 @@
+{{> getAllButtons}}
+
+{{> submitNew}}
+
+{{> searchButtons}} <br>
+
+{{> deleteForm}}
+
+
+<form action="/articles/{{articles.url_title}}/edit" method="get">
+  <input type="submit" value="Edit Article">
+</form>
+
+<br>
+
 <div class="articles">
     <h3>Title: {{articles.title}}</h3>
-    <p>Body: {{articles.body}}</p>
     <p>Author: {{articles.author}}</p>
+    <p>Body: {{articles.body}}</p>
     <p>Url Title: {{articles.url_title}}</p>
 </div>

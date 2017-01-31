@@ -19,11 +19,9 @@ const hbs = handlebars.create({
 app.engine('hbs', hbs.engine);
 app.set('view engine', 'hbs');
 
-app.get('/', (req,res) => {
-  res.render('index');
-});
 
 app.use(bodyParser.urlencoded({ extended: true}));
+
 app.use(methodOverride('_method'));
 
 app.use(cookieParser('keyboard cat'));
@@ -64,6 +62,10 @@ app.use('/articles', function (req, res, next) {
   } else {
     res.send({ "error": "bad headers" });
   }
+});
+
+app.get('/', (req,res) => {
+  res.render('index');
 });
 
 app.use('/products', products);

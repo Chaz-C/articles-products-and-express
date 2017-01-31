@@ -1,11 +1,18 @@
+{{> getAllButtons}}
+
+{{> submitNew}}
+
+{{> searchButtons}} <br>
+
 {{#if articles}}
   <form action="/articles" method="post">
   Title:<br>
-  <input type="text" id="article-name" placeholder="title" name="title"/><br>
-  Body:<br>
-  <input type="text" id="article-price" placeholder="text" name="body" /><br>
+  <input type="text" id="article-name" placeholder="title" name="title" autocomplete="off" /><br>
   Author:<br>
-  <input type="text" id="article-inventory" placeholder="name" name="author" /><br>
+  <input type="text" id="article-inventory" placeholder="name" name="author" autocomplete="off" /><br>
+  Body:<br>
+  {{!-- <input type="text" id="article-price" placeholder="text" name="body" /><br> --}}
+  <textarea id="article-body" rows="5" cols="80" name="body" autocomplete="off" ></textarea><br>
   <button id="request-button">Submit</button>
 </form>
 
@@ -13,11 +20,11 @@
 
     <form action="/products" method="post">
       Name:<br>
-      <input type="text" id="product-name" placeholder="name" name="name"/><br>
+      <input type="text" id="product-name" placeholder="name" name="name" autocomplete="off" /><br>
       Price:<br>
-      <input type="text" id="product-price" placeholder="number" name="price" /><br>
+      <input type="text" id="product-price" placeholder="number" name="price" autocomplete="off" /><br>
       Inventory:<br>
-      <input type="text" id="product-inventory" placeholder="number" name="inventory" /><br>
+      <input type="text" id="product-inventory" placeholder="number" name="inventory" autocomplete="off" /><br>
       <button id="request-button">Submit</button>
     </form>
 

@@ -1,5 +1,15 @@
 {{{messages}}}
 
+{{> getAllButtons}}
+
+{{> submitNew}}
+
+{{> searchButtons}} <br>
+
+{{> deleteForm}}
+
+
+
 {{#each products}}
   <div class="products">
     <h3>Name: {{name}}</h3>
@@ -12,8 +22,8 @@
 {{#each articles}}
   <div class="articles">
     <h3>Title: {{title}}</h3>
-    <p>Body: {{body}}</p>
     <p>Author: {{author}}</p>
+    <p>Body: {{body}}</p>
     <p>Url Title: {{url_title}}</p>
   </div>
 {{/each}}
