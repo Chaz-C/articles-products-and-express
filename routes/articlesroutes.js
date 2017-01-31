@@ -30,7 +30,7 @@ router.get('/:title/edit', (req, res) => {
 });
 
 router.post('/search', (req, res) => {
-  let title = req.body.title;
+  let title = req.body.value;
   res.redirect(303, `/articles/${encodeURIComponent(title)}`);
 });
 
@@ -73,19 +73,14 @@ router.put('/:title', (req, res) => {
     res.redirect(303, `/articles/${results.url_title}`);
   })
   .catch( error => {
-    if ( error.received === 0 ) {
-      req.flash("error-msg", `"${req.params.title}"" does not exist`);
-      res.redirect(303, '/articles/new');
-    } else {
       req.flash("error-msg", "PUT UNSUCCESSFUL Invalid property or value");
       res.redirect(303, `/articles/${req.params.title}/edit`);
-    }
   });
 });
 
 router.delete('/delete', (req, res) => {
   articles.deleteArticle(req.body.value)
-  .then( results =>  {
+  .then(function () {
     req.flash("success-msg", "DELETE SUCCESSFUL!!");
     res.redirect(303, '/articles');
   })

@@ -8,6 +8,26 @@ const db = pgp({
   password: ''
 });
 
+function stopDuplicates(newProduct){
+  return new Promise(function (resolve, reject){
+    if ( true ) {
+      let DoesItExist = db.none(`SELECT * FROM products WHERE products.name = '${newProduct.name}'`);
+    resolve(DoesItExist);
+    } else {
+      reject ( new Error('article already exists') );
+    }
+  });
+}
+
+function productValidator(newProduct){
+  return new Promise(function (resolve, reject){
+    if ( newProduct.name !== '' && newProduct.price !== '' && newProduct.inventory !== '' ) {
+    resolve(newProduct);
+    } else {
+      reject ( new Error('Invalid values') );
+    }
+  });
+}
 
 function getAllProducts() {
   return db.many('SELECT * FROM products');
@@ -22,42 +42,28 @@ function postProduct(newProduct) {
 }
 
 function productPut(newProductValues, oldItemId) {
-
-  console.log(newProductValues);
-
-      let qs = '';
-      let count = 0;
-
-      if ( newProductValues.hasOwnProperty('name') && newProductValues.name !== '' ) {
-        qs = `name = '${newProductValues.name}'`;
-        count += 1;
-      }
-      if ( newProductValues.hasOwnProperty('price') && newProductValues.price !== '') {
-        if ( count > 0 ) {
-          qs += `, price = '${newProductValues.price}'`;
-        } else {
-          qs = `price = ${newProductValues.price}`;
-        }
-        count += 1;
-      }
-      if ( newProductValues.hasOwnProperty('inventory') && newProductValues.inventory !== '') {
-        if ( count > 0 ) {
-          qs += `, inventory = ${newProductValues.inventory}`;
-        } else {
-          qs = `inventory = ${newProductValues.inventory}`;
-        }
-      }
-
-      // console.log(`db.one('UPDATE products SET ${qs} WHERE products.id = ${oldItemId}')`);
-
-  return db.none(`UPDATE products SET ${qs} WHERE products.id = ${oldItemId}`);
+  let updatedProduct;
+  return db.one(`SELECT * FROM products WHERE products.id = ${oldItemId}`)
+  .then( results => {
+    let oldProduct = results;
+    updatedProduct = Object.assign(oldProduct, newProductValues);
+    return db.none(`UPDATE products SET name = '${updatedProduct.name}', price = ${updatedProduct.price}, inventory = ${updatedProduct.inventory} WHERE products.id = ${oldItemId}`);
+  })
+  .then( function() {
+    return db.one(`SELECT * FROM products WHERE products.id = ${updatedProduct.id}`);
+  });
 }
 
 function deleteProduct(id) {
-  return db.none(`DELETE FROM products WHERE products.id = ${id}`);
+  return db.one(`SELECT * FROM products WHERE products.id = ${id}`)
+  .then( results => {
+    return db.none(`DELETE FROM products WHERE products.id = ${id}`);
+  });
 }
 
 module.exports = {
+  stopDuplicates : stopDuplicates,
+  productValidator : productValidator,
   getAllProducts : getAllProducts,
   getProductById : getProductById,
   postProduct : postProduct,

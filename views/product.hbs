@@ -6,10 +6,13 @@
 
 {{> deleteForm}}
 
+<form action="/products/{{products.id}}/edit" method="get">
+  <input type="submit" value="Edit Product">
+</form>
 
 <div class="products">
   <h3>Name: {{products.name}}</h3>
-  <p>Price: {{products.price}}</p>
+  <p>Price: ${{products.price}}</p>
   <p>Inventory: {{products.inventory}}</p>
   <p>Id: {{products.id}}</p>
 </div>

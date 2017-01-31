@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
 const app = express();
-
 const products = require('../db/products');
 
 router.get('/new', (req, res) => {
@@ -14,7 +13,8 @@ router.get('/', (req, res) => {
     res.render('index', { products: results, messages: res.locals.messages() });
   })
   .catch( error => {
-    console.log(error);
+    req.flash("error-msg", `There are no products`);
+    res.redirect(303, '/products/new');
   });
 });
 
@@ -24,8 +24,14 @@ router.get('/:id/edit', (req, res) => {
     res.render('edit.hbs', { products: results, messages: res.locals.messages() } );
   })
   .catch( err => {
-    console.log(err);
+    req.flash("error-msg", `"${req.params.id}"" does not exist`);
+    res.redirect(303, '/products/new');
   });
+});
+
+router.post('/search', (req, res) => {
+  let id = req.body.value;
+  res.redirect(303, `/products/${id}`);
 });
 
 router.get('/:id', (req, res) => {
@@ -34,58 +40,54 @@ router.get('/:id', (req, res) => {
     res.render('product.hbs', { products: results, messages: res.locals.messages() } );
   })
   .catch( err => {
-    console.log(err);
+    req.flash("error-msg", `"${req.params.id}"" does not exist`);
+    res.redirect(303, '/products/new');
   });
 });
 
-
 router.post('/', (req, res) => {
   let newProduct = req.body;
-
-  if ( newProduct.hasOwnProperty('name') && newProduct.hasOwnProperty('price') &&
-    newProduct.hasOwnProperty('inventory') && newProduct.name !== '' && newProduct.price !== '' && newProduct.inventory !== '' ) {
-
-    products.postProduct(newProduct)
-    .then(function () {
-      res.redirect('/products');
-    })
-    .catch( error => {
-      req.flash("error-msg", "POST UNSUCCESSFUL Invalid property or value");
-      res.redirect('/products/new');
-    });
-
-  } else {
-    req.flash("error-msg", "POST UNSUCCESSFUL Invalid property or value");
+  products.stopDuplicates(newProduct)
+  .then(function () {
+    return products.productValidator(newProduct);
+  })
+  .then(function () {
+    return products.postProduct(newProduct);
+  })
+  .then(function () {
+    res.redirect('/products');
+  })
+  .catch( error => {
+    req.flash("error-msg", "POST UNSUCCESSFUL Invalid value or Product already exists");
     res.redirect('/products/new');
-  }
+  });
 });
 
 router.put('/:id', (req, res) => {
   let newProductValues = req.body;
-
-  products.productPut(newProductValues, req.params.id)
+  products.productValidator(newProductValues)
+  .then(function () {
+    return products.productPut(newProductValues, req.params.id);
+  })
   .then(function () {
     res.redirect(303, `/products/${req.params.id}`);
   })
   .catch( error => {
-    console.log(error);
     req.flash("error-msg", "PUT UNSUCCESSFUL Invalid property or value");
     res.redirect(303, `/products/${req.params.id}/edit`);
   });
-
 });
 
-router.delete('/:id', (req, res) => {
-
-    products.deleteProduct(req.params.id)
-    .then(function () {
-      res.redirect(303, '/products');
-    })
-    .catch( error => {
-      console.log(error);
-      req.flash("error-msg", "DELETE UNSUCCESSFUL, ID does not exist");
-      res.redirect(303, '/products');
-    });
+router.delete('/delete', (req, res) => {
+  products.deleteProduct(req.body.value)
+  .then(function () {
+    req.flash("success-msg", "DELETE SUCCESSFUL!!");
+    res.redirect(303, '/products');
+  })
+  .catch( error => {
+    req.flash("error-msg", "DELETE UNSUCCESSFUL, ID does not exist");
+    res.redirect(303, '/products');
+  });
 });
 
 module.exports = router;
